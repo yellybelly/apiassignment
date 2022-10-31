@@ -1,0 +1,38 @@
+```{r}
+library(tidyverse)
+library(jsonlite)
+library(RCurl)
+library(stringr)
+library(conflicted)
+library(knitr)
+library(httr)
+```
+
+```{r}
+myapi<-GET("https://api.nytimes.com/svc/movies/v2/critics/.json?api-key=lVACDVl7hp1UYRUxc4ee1lTNmJTLsTt2")
+myapi
+```
+
+
+```{r}
+new <- fromJSON(rawToChar(myapi$content))
+names(new)
+```
+
+```{r}
+df<-data.frame(new$results, stringsAsFactors = FALSE)
+```
+
+
+```{r}
+library(plyr)
+library(dplyr)
+renames <- c(Name = "display_name", Sort.Name = "sort_name", Status = "status", Bio = "bio", Seo.Name = "seo_name")
+do.call(dplyr::rename, c(list(df), renames)) %>% 
+kable
+```
+
+
+
+
+
